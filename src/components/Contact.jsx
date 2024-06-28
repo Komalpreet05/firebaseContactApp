@@ -4,15 +4,23 @@ import { IoMdTrash } from "react-icons/io";
 import { RiEditCircleLine } from "react-icons/ri";
 import { doc, deleteDoc } from 'firebase/firestore';
 import { db } from "../config/firebase"
-const Contact = ({ con, isOpen, onClose }) => {
+import AddAndUpdateContact from './AddAndUpdateContact';
+import useCustom from '../hooks/useCustom';
+import { toast } from "react-toastify";
+
+const Contact = ({ con }) => {
     const deleteContact = async (id) => {
         try {
-            await deleteDoc((doc(db, "contacts", id)))
+            await deleteDoc((doc(db, "contacts", id)));
+            toast.success("Contact Deleted");
         }
         catch (err) {
             console.log(err);
         }
     }
+    // console.log(con);
+    const { isOpen, onClose, onOpen } = useCustom();
+
     return (
         <>
             <div key={con.id} className='bg-yellow flex p-1 justify-between rounded-lg'>
@@ -25,10 +33,12 @@ const Contact = ({ con, isOpen, onClose }) => {
                 </div>
                 <div className='flex items-center text-3xl'>
 
-                    <RiEditCircleLine className='cursor-pointer' />
+                    <RiEditCircleLine onClick={onOpen} className='cursor-pointer' />
                     <IoMdTrash onClick={() => deleteContact(con.id)} className='text-orange cursor-pointer' />
                 </div>
             </div>
+
+            <AddAndUpdateContact isUpdate isOpen={isOpen} onClose={onClose} contact={con} />
         </>
     )
 }

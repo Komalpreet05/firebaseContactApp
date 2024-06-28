@@ -1,13 +1,7 @@
 import React from 'react'
 
 import Contact from './Contact';
-import AddAndUpdateContact from './AddAndUpdateContact';
-import useCustom from '../hooks/useCustom';
-
-
-
 const ContactCard = ({ contacts }) => {
-    const { isOpen, onClose, onOpen } = useCustom();
 
     return (
         <>
@@ -20,7 +14,7 @@ const ContactCard = ({ contacts }) => {
                     })
                 }
             </div>
-            <AddAndUpdateContact isOpen={isOpen} onClose={onClose} />
+
 
         </>
     )

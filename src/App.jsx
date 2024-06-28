@@ -7,8 +7,9 @@ import { collection, getDocs } from "firebase/firestore"
 import { db } from "./config/firebase"
 import ContactCard from './components/ContactCard'
 import AddAndUpdateContact from './components/AddAndUpdateContact'
-import useCustom from './hooks/useCustom'
-
+import useCustom from './hooks/useCustom';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 const App = () => {
@@ -43,6 +44,8 @@ const App = () => {
         <Search onOpen={onOpen}></Search>
         <ContactCard contacts={contacts} isOpen={isOpen} onClose={onClose}></ContactCard>
         <AddAndUpdateContact isOpen={isOpen} onClose={onClose}></AddAndUpdateContact>
+        <ToastContainer position='bottom-center'></ToastContainer>
+
       </div>
 
     </>

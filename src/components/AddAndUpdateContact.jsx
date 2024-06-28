@@ -1,30 +1,53 @@
 import React from 'react'
 import Modal from './Modal'
 import { Field, Form, Formik } from "formik"
-import { collection, addDoc } from 'firebase/firestore'
+import { doc, addDoc, updateDoc, collection } from 'firebase/firestore'
 import { db } from "../config/firebase"
+import { toast } from 'react-toastify'
 
-const AddAndUpdateContact = ({ isOpen, onClose }) => {
-
+const AddAndUpdateContact = ({ isOpen, onClose, isUpdate, contact }) => {
+    // console.log(con);
     const addContact = async (contact) => {
         try {
             const contactRef = collection(db, "contacts");
             await addDoc(contactRef, contact);
+            onClose();
+            toast.success("Contact Added")
         }
         catch (err) {
             console.log(err)
         }
     }
+
+
+    const updateContact = async (contact, id) => {
+        try {
+            const contactRef = doc(db, "contacts", id);
+            await updateDoc(contactRef, contact);
+            onClose();
+            toast.success("Changes Saved Successfully");
+        }
+        catch (err) {
+            console.log(err)
+        }
+    }
+    // console.log(isUpdate)
     return (
         <div>
             <Modal isOpen={isOpen} onClose={onClose} className="text-white">
-                <Formik initialValues={{
-                    name: "",
-                    email: ""
-                }}
+                <Formik initialValues={
+                    isUpdate ?
+                        {
+                            name: contact.name,
+                            email: contact.email
+                        } : {
+                            name: "",
+                            email: ""
+                        }}
                     onSubmit={(values) => {
                         console.log(values)
-                        addContact(values)
+                        isUpdate ? updateContact(values, contact.id) :
+                            addContact(values)
                     }}
                 >
                     <Form className='flex flex-col gap-4'>
@@ -38,7 +61,7 @@ const AddAndUpdateContact = ({ isOpen, onClose }) => {
                             <Field name="email" type="email" className="border h-10 " />
                         </div>
                         <button className='bg-orange px-3 py-1.5 border self-end rounded-lg'>
-                            Add Contact
+                            {isUpdate ? "Update" : "Add"} Contact
                         </button>
                     </Form>
                 </Formik>
